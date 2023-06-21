@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">
+      <input type="text" v-model="inputdata" placeholder="inputdata" />
+      <p>{{inputdata}}</p>
+
+      <div>
+        <!-- add values -->
+        <p>{{"hello\t" + inputdata}}</p>
+        <img v-bind:src="imgurl" alt="" />
+      </div>
+
+      <br /><br /><br />
+      <!-- counter  -->
+      <!-- <div>
+        <button v-on:click="counter++">add</button>
+        <p>{{counter}}</p>
+        <button v-on:click="counter>1?counter--:0">minus</button>
+      </div> -->
+
+      <!--  <div>
+        <button v-on:click="add">add</button>
+        <p v-once>starting counter : {{ counter}}</p>
+        <p>{{counter}}</p>
+        <button v-on:click="minus">minus</button>
+      </div>
+      <br /> -->
+      <!--  <div>
+        <form v-on:submit.prevent="submit">
+          <input type="text" v-on:input="inputFunc" />
+          <p>{{resultinputData}}</p>
+        </form>
+      </div> -->
+
+      <!--  <div>
+        <input
+          type="text"
+          placeholder="enter name "
+          v-model="exceriseinput"
+          v-model="excerise2input"
+          v-on:keydown="keydownfun"
+          v-on:keyup.enter="enterfun"
+        />
+        <p>onkeydown ::: {{exceriseinput}}</p>
+        <button v-on:click="resetdata">reset data</button>
+        <br />
+        <p>press enter ::{{excerise2input}}</p>
+        <br /><br />
+        <p><b>FullName ::{{fullName}}</b></p>
+      </div> -->
+
+      <div>
+        <button @click="add(5)">add</button>
+        <button @click="add(10)">minus</button>
+        <p>{{newcounter}}</p>
+        <p>{{callcounter}}</p>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
