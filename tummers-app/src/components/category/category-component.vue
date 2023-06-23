@@ -1,6 +1,6 @@
 <template id="category">
   <section class="container">
-    <div v-if="checkFlag == true">
+    <div>
       <div class="row" v-for="category in categoryArr" :key="category">
         <div class="col-12 img-grid">
           <a @click="subCategoryFunction(category.id)">
@@ -14,42 +14,29 @@
         </div>
       </div>
     </div>
-    <div v-else>
-      <subCategory
-        @backToHome="toggleFlag"
-        :subCategoryId="subCategoryId"
-        :backFlag="checkFlag"
-      ></subCategory>
-    </div>
   </section>
 </template>
 
 <script>
 import { categoryList } from "../../productData";
-import subCategory from "../sub-category/sub-category.vue";
 export default {
   name: "categoryComponent",
-  components: { subCategory },
+  props: {
+    subCategoryList: {
+      type: Array,
+    },
+  },
   data() {
     return {
       categoryArr: [],
-      subCategoryId: null,
-      checkFlag: true,
     };
   },
   methods: {
     subCategoryFunction(id) {
-      console.log("id", id, this.checkFlag);
-      this.checkFlag = false;
-      this.subCategoryId = id;
-    },
-    toggleFlag(values) {
-      this.checkFlag = values;
+      this.$emit("selectedCategoryId", id);
     },
   },
-  computed: {},
-  created() {
-    console.log("categoryList", categoryList);
+  mounted() {
     this.categoryArr = categoryList;
   },
 };

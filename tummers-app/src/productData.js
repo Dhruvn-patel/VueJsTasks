@@ -1,7 +1,7 @@
 export const categoryList = [
     {
         id: 1,
-        name: "Beeld & Geluid",
+        name: "Images & Sound",
         img: "https://eptummers.nl/media/tailoredslider_media/2/Beeld-geluid_2.png",
     },
     {
@@ -11,17 +11,17 @@ export const categoryList = [
     },
     {
         id: 3,
-        name: "Huishouden & Wonen",
+        name: "Household & Living",
         img: "https://eptummers.nl/media/tailoredslider_media/2/huishouden-wonen.png",
     },
     {
         id: 4,
-        name: "Keuken",
+        name: "Kitchen",
         img: "https://eptummers.nl/media/tailoredslider_media/2/Keuken_1.png",
     },
     {
         id: 5,
-        name: "Sport & Verzorging",
+        name: "Sports & Care",
         img: "https://eptummers.nl/media/tailoredslider_media/2/scheerhorloge.png",
     },
 ];
@@ -455,7 +455,7 @@ export const productList = [
         quantity: 10,
         sell: false,
         description: "good dmsof dmslkmfs fmoksdmfsd",
-        img: "https://eptummers.nl/media/catalog/product/cache/7596907dda960431c9a022f2d3b01a28/p/h/philips_trim_3_1.jpg",
+        img: "https://eptummers.nl/media/catalog/product/cache/7596907dda960431c9a022f2d3b01a28/1/4/14-series-3000-baardtrimmer.jpg",
     },
 ];
 

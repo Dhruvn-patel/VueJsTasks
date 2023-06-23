@@ -3,21 +3,20 @@
     <navBar />
   </nav>
   <main id="mainComponent">
-    <!-- <categoryComponent /> -->
-    <router-view></router-view>
+    <HomePage />
   </main>
   <footer></footer>
 </template>
 
 <script>
 import navBar from "./components/nav-bar/nav-bar.vue";
-// import categoryComponent from "./components/category/category-component.vue";
+import HomePage from "./pages/HomePage.vue";
 
 export default {
   name: "App",
   components: {
     navBar,
-    // categoryComponent
+    HomePage,
   },
 };
 </script>
@@ -28,7 +27,6 @@ export default {
   padding: 0;
   box-sizing: border-box;
   list-style-type: none;
-  font-size: 16px;
   text-decoration: none;
 }
 #mainComponent {
