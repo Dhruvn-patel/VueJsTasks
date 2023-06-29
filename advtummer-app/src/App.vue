@@ -3,7 +3,9 @@
     <header>
       <navBar />
     </header>
-    <main id="mainComponent"></main>
+    <main id="mainComponent">
+      <HomePage />
+    </main>
     <footer>
       <theFooter />
     </footer>
@@ -13,9 +15,10 @@
 <script>
 import navBar from "./components/nav/navbar.vue";
 import theFooter from "./components/footer/footer.vue";
+import HomePage from "./pages/HomePage.vue";
 export default {
   name: "App",
-  components: { navBar, theFooter },
+  components: { navBar, theFooter, HomePage },
 };
 </script>
 

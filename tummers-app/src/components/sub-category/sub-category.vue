@@ -56,7 +56,7 @@ export default {
 .card-item {
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   padding: 3px;
-  font-weight: bold;
+  font-weight: bold;  
   text-align: center;
 }
 .card-item :hover {

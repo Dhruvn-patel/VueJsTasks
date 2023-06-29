@@ -26,6 +26,9 @@
 <script>
 export default {
   name: "navBar",
+  data() {},
+  methods: {},
+  computed: {},
 };
 </script>
 

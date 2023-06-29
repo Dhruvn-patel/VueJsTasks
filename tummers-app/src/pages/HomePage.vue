@@ -63,7 +63,7 @@
     </div>
 
     <!-- Product selected -->
-    <div v-else-if="!isSubCategory">
+    <div v-else-if="!isSubCategory">  
       <ProductDetail :prouductObj="productObj"></ProductDetail>
     </div>
   </section>
