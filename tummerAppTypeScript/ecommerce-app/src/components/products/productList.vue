@@ -56,7 +56,7 @@ export default {
         showConfirmButton: false,
         timer: 1500,
       });
-      console.log("Id", data);
+
       //insert obj
       const objProduct = {
         id: data.id,

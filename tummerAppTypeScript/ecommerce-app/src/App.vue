@@ -26,6 +26,7 @@ export default defineComponent({
 </script>
 
 <style>
+
 .swal-wide {
   width: 400px !important;
 }
@@ -36,6 +37,7 @@ export default defineComponent({
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-decoration: none;
 }
 
 #mainComponent {

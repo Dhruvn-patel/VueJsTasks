@@ -368,7 +368,7 @@ export const products = {
 
     sellproduct(state: products) {
       const data = state.productList.filter((data: any) => data.sell === true);
-      console.log("sell", data);
+
       return data;
     },
   },
@@ -378,25 +378,23 @@ export const products = {
       state.selectedProduct = state.productList.filter(
         (data) => data.subCatId === payload.Id
       );
-      console.log(state.selectedProduct);
+      
     },
 
     /* products call */
-    singleProductFunction(state: products, payload: { productId: number }) {
-      const data = state.productList.filter(
-        (data) => data.id === payload.productId
-      );
-      console.log("sdaaadadads", data);
+    singleProductFunction(state: products, payload: { id: number }) {
+      const data = state.productList.filter((data) => data.id === payload.id);
+    
 
       state.productObj = data[0];
-      console.log("state.selectedProduct", state.productObj);
+
     },
   },
   actions: {
     productsFunction(context: any, payload: { Id: number }) {
       context.commit("productsFunction", payload);
     },
-    singleProductFunction(context: any, payload: { productId: number }) {
+    singleProductFunction(context: any, payload: { id: number }) {
       context.commit("singleProductFunction", payload);
     },
   },

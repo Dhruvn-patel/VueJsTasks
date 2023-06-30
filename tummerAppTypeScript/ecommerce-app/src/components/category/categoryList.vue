@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     subCategory(id, text) {
-      console.log("name", text);
+  
       this.$router.push({
         name: "subcategory",
         path: "/subCategory/:id",

@@ -57,7 +57,7 @@ export default {
         }
       }, 1000);
 
-      // console.log("outside", this.mins, this.secs);
+  
     },
   },
   created() {

@@ -121,7 +121,7 @@ export const subcategory = {
       state.selectedCategory = state.subCategoryList.filter(
         (data) => data.catId === payload.catId
       );
-      console.log(state.selectedCategory);
+     
     },
   },
   actions: {

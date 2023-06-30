@@ -14,6 +14,7 @@ const store = createStore({
   state() {
     return {
       isAuthLogin: JSON.parse(localStorage.getItem("isAuthLogin") || "").flag,
+      // isAuthLogin: false,
       timmerFlag: true,
       userLoginCredential: [
         { id: 1, username: "Dhruv", password: "123", active: false },
@@ -27,20 +28,14 @@ const store = createStore({
       // get isAuthLogin
       const loginData = JSON.parse(localStorage.getItem("isAuthLogin") || " ");
       // set isAuthLogin
+      console.log(loginData.userId);
+
       localStorage.setItem(
         "isAuthLogin",
         JSON.stringify({
-          id: loginData.userId,
-          name: loginData.username,
           flag: state.isAuthLogin,
+          userId: loginData.userId,
         })
-      );
-      const getdata = JSON.parse(localStorage.getItem("addCartProduct") || "");
-      const { items, qty, total } = getdata;
-      // addCartProduct
-      localStorage.setItem(
-        "addCartProduct",
-        JSON.stringify({ items, qty, total, userId: null })
       );
     },
     timmerToogleFunction(state: any) {

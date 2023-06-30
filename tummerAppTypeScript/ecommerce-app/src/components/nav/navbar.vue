@@ -10,7 +10,6 @@
           /> </router-link
       ></span>
       <span class="pa-2">
-  
         <v-info v-if="isLogin === false">
           <router-link to="/login" name="login">
             <img
@@ -21,7 +20,7 @@
           </router-link>
         </v-info>
         <v-info v-else>
-          <v-btn class="rounded mr-2 rounded-pill" @click ="LogOutFunction"
+          <v-btn class="rounded mr-2 rounded-pill" @click="LogOutFunction"
             >logout
           </v-btn>
         </v-info>
@@ -57,6 +56,7 @@ export default {
       isLogin: "isLogin",
     }),
   },
+ 
 };
 </script>
 

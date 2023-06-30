@@ -50,7 +50,7 @@ export const category = {
       return state.categoryList;
     },
     categoryId(state: category, id: number) {
-      console.log(id);
+
       return state.categoryList;
     },
   },

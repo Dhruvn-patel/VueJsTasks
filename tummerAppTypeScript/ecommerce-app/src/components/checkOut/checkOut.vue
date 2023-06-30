@@ -7,7 +7,7 @@
     <div v-else>
       <div class="main">
         <div class="total">
-          <div><strong>Total : </strong> ₹{{ total }}</div>
+        
         </div>
         <div class="product-list">
           <li v-for="data in checkOutArr" :key="data">
@@ -41,7 +41,7 @@ export default {
   data() {
     return {
       checkOutArr: [],
-      total: 0,
+     
     };
   },
   computed: {
@@ -51,16 +51,35 @@ export default {
   },
   methods: {},
   mounted() {
-    const checkOutData = JSON.parse(localStorage.getItem("checkOutProduct"));
-    this.checkOutArr = checkOutData.items;
-    this.total = checkOutData.total;
+    let idx = 0;
+    const userLoginData = JSON.parse(localStorage.getItem("userLogin") || "");
+    const userId = JSON.parse(localStorage.getItem("userCurrent") || "").userId;
+    let cartUserItem = [];
+  
+    for (let i = 0; i < userLoginData.length; i++) {
+      if (userLoginData[i].id === userId) {
+        cartUserItem = userLoginData[i].order;
+        idx = i;
+    
+        
+        localStorage.setItem("userLogin", JSON.stringify(userLoginData));
+        break;
+      }
+    }
+    this.checkOutArr = cartUserItem;
+   
   },
 };
 </script>
 
 <style scoped>
+.product-detail {
+  padding: 0 2rem;
+  text-align: left;
+}
 .checkoutImg {
   height: 150px;
+  width: 150px;
   object-fit: cover;
   overflow: clip;
 }
@@ -97,5 +116,8 @@ li {
   font-size: 2rem;
   font-weight: 800;
   color: #aaa9a9;
+}
+.section-one {
+  margin: 0 2rem;
 }
 </style>

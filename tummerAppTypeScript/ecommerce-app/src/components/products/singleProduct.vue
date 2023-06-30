@@ -43,7 +43,32 @@ export default {
         name: data.name,
         price: data.price,
       };
-      this.addProductToCart({ product: objProduct });
+
+      const cartItem = {
+        productId: data.id,
+        qty: data.quantity,
+      };
+
+      if (
+        JSON.parse(localStorage.getItem("cart")) != null &&
+        JSON.parse(localStorage.getItem("cart")).length > 0
+      ) {
+        const cartData = JSON.parse(localStorage.getItem("cart"));
+        const productInCartIndex = cartData.findIndex(
+          (data) => data.productId == cartItem.productId
+        );
+
+        if (productInCartIndex >= 0) {
+          cartData[productInCartIndex].qty++;
+        } else {
+          cartData.push(cartItem);
+        }
+        localStorage.setItem("cart", JSON.stringify(cartData));
+      } else {
+        localStorage.setItem("cart", JSON.stringify([cartItem]));
+      }
+
+      // this.addProductToCart({ product: objProduct });
     },
   },
   computed: {
@@ -53,8 +78,8 @@ export default {
   },
   mounted() {
     const id = this.$route.params.id;
-    console.log("single value ", id);
-    this.singleProductFunction({ productId: Number(id) });
+
+    this.singleProductFunction({ id: Number(id) });
   },
 };
 </script>

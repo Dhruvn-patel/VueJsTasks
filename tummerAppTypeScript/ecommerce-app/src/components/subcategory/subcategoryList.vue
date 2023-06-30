@@ -2,7 +2,7 @@
   <div class="head">
     <div class="card">
       <div class="card-item" v-for="subdata in subCategoryArr" :key="subdata">
-        <div @click="productId(subdata.id)">
+        <div @click="id(subdata.id)">
           <div class="detials">
             <img class="detail-card" :src="subdata.img" alt="" />
           </div>
@@ -21,9 +21,9 @@ export default {
     ...mapActions({
       subCategoryFunction: "subcategoryModule/subCategoryFunction",
     }),
-    productId(id) {
+    id(id) {
       // this.productsFunction({ Id: id });
-      console.log("p", id);
+
       this.$router.push({
         name: "products",
         path: "/products/:id",

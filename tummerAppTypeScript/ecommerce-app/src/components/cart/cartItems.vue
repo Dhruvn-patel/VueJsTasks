@@ -13,12 +13,13 @@
         >
       </v-sheet>
     </v-sheet>
+
     <h3>Total Amount: ₹ {{ cartTotal }}</h3>
     <ul>
       <cartCommon
         v-for="item in cartData"
-        :key="item.productId"
-        :prod-id="item.productId"
+        :key="item.id"
+        :prod-id="item.id"
         :name="item.name"
         :image="item.image"
         :price="item.price"
@@ -33,8 +34,14 @@ import { mapActions, mapGetters } from "vuex";
 import cartCommon from "./cartCommon.vue";
 export default {
   name: "cartItems",
-  components: { cartCommon },
-
+  components: {
+    cartCommon,
+  },
+  data() {
+    return {
+      localStorageCart: JSON.parse(localStorage.getItem("cart")),
+    };
+  },
   computed: {
     ...mapGetters({
       cartTotal: "cartModule/total",
@@ -55,45 +62,41 @@ export default {
             timer: 1500,
           });
         } else {
-          const { items, total, qty, userId } = JSON.parse(
-            localStorage.getItem("addCartProduct")
+          const userId = JSON.parse(
+            localStorage.getItem("userCurrent") || ""
+          ).userId;
+
+          let idx = 0;
+          const userLoginData = JSON.parse(
+            localStorage.getItem("userLogin") || ""
           );
 
-          this.cartData = JSON.parse(
-            localStorage.getItem("userCartProduct")
-          ).items;
-          // trendingProduct setItems
-          localStorage.setItem(
-            "trendingProduct",
-            JSON.stringify({
-              items: this.cartData,
-              cartTotal: this.cartTotal,
-            })
-          );
+          for (let i = 0; i < userLoginData.length; i++) {
+            if (userLoginData[i].id === userId) {
+              userLoginData[i].order = [
+                ...userLoginData[i].cart,
+                ...userLoginData[i].order,
+              ];
+              
+              idx = i;
+              // trendingProduct setItems
+              localStorage.setItem(
+                "trendingProduct",
+                JSON.stringify({
+                  items: userLoginData[i].order,
+                  cartTotal: this.cartTotal,
+                })
+              );
 
-          // checkOutProduct setItems
-          localStorage.setItem(
-            "addCartProduct",
-            JSON.stringify({
-              items: [],
-              userId,
-              total: 0,
-              qty: 0,
-            })
-          );
-
-          // remove productFrom cart
-          localStorage.setItem(
-            "checkOutProduct",
-            JSON.stringify({
-              items,
-              userId,
-              total,
-              qty,
-            })
-          );
-
+              /* set cart user item empty() */
+              userLoginData[idx].total = 0;
+              userLoginData[idx].qty = 0;
+              userLoginData[idx].cart = [];
+              break;
+            }
+          }
           this.$router.push({ path: "/checkout" });
+          localStorage.setItem("userLogin", JSON.stringify(userLoginData));
         }
       }
     },

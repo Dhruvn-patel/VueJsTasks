@@ -4,7 +4,7 @@ interface cartData {
   qty: number;
 }
 interface cardDataItem {
-  productId: number;
+  id: number;
   title: string;
   image: string;
   price: number;
@@ -14,176 +14,343 @@ export const cart = {
   namespaced: true,
   state() {
     return {
-      cartitems: JSON.parse(localStorage.getItem("addCartProduct") || "").items,
+      cartitems: JSON.parse(localStorage.getItem("addCartProduct") || "").items,  
       total: JSON.parse(localStorage.getItem("addCartProduct") || "").total,
       qty: JSON.parse(localStorage.getItem("addCartProduct") || "").qty,
       // cartitems: [],
-      // total: 0,
-      // qty: 0,
+      // total: [],
+      // qty: [],
     };
   },
   getters: {
     total(state: any) {
       return state.total;
     },
-    cartQty(state: any) {
+    cartQty(state: any, _getter: any, rootState: any) {
+      const userId = JSON.parse(
+        localStorage.getItem("userCurrent") || ""
+      ).userId;
+
+      if (rootState.isAuthLogin === true) {
+        const userLoginData = JSON.parse(
+          localStorage.getItem("userLogin") || ""
+        );
+        for (let i = 0; i < userLoginData.length; i++) {
+          if (userLoginData[i].id === userId) {
+            state.qty = userLoginData[i].qty;
+            break;
+          }
+        }
+      }
+
       return state.qty;
     },
     items(state: any, _getter: any, rootState: any) {
       console.log("rootstate ::", rootState.isAuthLogin);
+      const userId = JSON.parse(
+        localStorage.getItem("userCurrent") || ""
+      ).userId;
 
-      if (rootState.isAuthLogin) {
-        state.cartitems = JSON.parse(
-          localStorage.getItem("userCartProduct") || ""
-        ).items;
+      if (rootState.isAuthLogin === true) {
+        const userLoginData = JSON.parse(
+          localStorage.getItem("userLogin") || ""
+        );
+        for (let i = 0; i < userLoginData.length; i++) {
+          if (userLoginData[i].id === userId) {
+            state.cartitems = userLoginData[i].cart;
+            state.total = userLoginData[i].total;
+            state.qty = userLoginData[i].qty;
+            break;
+          }
+        }
       }
+
       return state.cartitems;
     },
   },
   mutations: {
     addProductToCart(state: any, payload: any) {
-      /* const productInCartIndex = state.cartitems.findIndex(
-        (data: any) => data.productId === payload.product.id
-      );
-      if (productInCartIndex >= 0) {
-        state.cartitems[productInCartIndex].qty++;
+      let data;
+      const userId = JSON.parse(
+        localStorage.getItem("userCurrent") || ""
+      ).userId;
+      const checkLoginUser = JSON.parse(
+        localStorage.getItem("isAuthLogin") || ""
+      ).flag;
+
+      if (checkLoginUser) {
+        /* userCart */
+        let idx = 0;
+        const userLoginData = JSON.parse(
+          localStorage.getItem("userLogin") || ""
+        );
+        let cartUserItem = [];
+        for (let i = 0; i < userLoginData.length; i++) {
+          if (userLoginData[i].id === userId) {
+            cartUserItem = userLoginData[i].cart;
+            idx = i;
+            break;
+          }
+        }
+
+        const productInCartIndex = cartUserItem.findIndex(
+          (data: any) => data.id === payload.product.id
+        );
+
+        if (productInCartIndex >= 0) {
+          cartUserItem[productInCartIndex].qty++;
+        } else {
+          const newItem = {
+            id: payload.product.id,
+            name: payload.product.name,
+            image: payload.product.image,
+            price: payload.product.price,
+            qty: 1,
+          };
+          cartUserItem.push(newItem);
+          state.total += payload.product.price;
+          userLoginData[idx].total = state.total;
+          userLoginData[idx].qty = cartUserItem.length;
+        }
+        userLoginData[idx].cart = cartUserItem;
+        localStorage.setItem("userLogin", JSON.stringify(userLoginData));
       } else {
-        const newItem = {
-          productId: payload.product.id,
-          name: payload.product.name,
-          image: payload.product.image,
-          price: payload.product.price,
-          qty: 1,
-        };
-        state.cartitems.push(newItem);
-        state.qty++;
+        /* cart addProduct */
+        data = JSON.parse(localStorage.getItem("addCartProduct") || "");
+        const items = data.items;
+        let total = data.total;
+        let qty = data.qty;
+        const productInCartIndex = items.findIndex(
+          (data: any) => data.id === payload.product.id
+        );
+        if (productInCartIndex >= 0) {
+          items[productInCartIndex].qty++;
+          // state.cartitems[productInCartIndex].qty++;
+        } else {
+          const newItem = {
+            id: payload.product.id,
+            name: payload.product.name,
+            image: payload.product.image,
+            price: payload.product.price,
+            qty: 1,
+          };
+          qty++;
+          items.push(newItem);
+          state.cartitems.push(newItem);
+          state.qty++;
+        }
+        state.total += payload.product.price;
+        total += payload.product.price;
+
+        localStorage.setItem(
+          "addCartProduct",
+          JSON.stringify({
+            items,
+            total: total,
+            qty: qty,
+          })
+        );
       }
-      state.total += payload.product.price; */
-      const data = JSON.parse(localStorage.getItem("addCartProduct") || "");
-      const items = data.items;
-      let total = data.total;
-      let qty = data.qty;
-      const productInCartIndex = items.findIndex(
-        (data: any) => data.productId === payload.product.id
-      );
-      if (productInCartIndex >= 0) {
-        items[productInCartIndex].qty++;
-        state.cartitems[productInCartIndex].qty++;
-      } else {
-        const newItem = {
-          productId: payload.product.id,
-          name: payload.product.name,
-          image: payload.product.image,
-          price: payload.product.price,
-          qty: 1,
-        };
-        qty++;
-        items.push(newItem);
-        state.cartitems.push(newItem);
-        state.qty++;
-      }
-      state.total += payload.product.price;
-      total += payload.product.price;
-      localStorage.setItem(
-        "addCartProduct",
-        JSON.stringify({
-          items,
-          total: total,
-          userId: null,
-          qty: qty,
-        })
-      );
     },
 
     increaseQty(state: any, payload: any) {
-      console.log("state.cartitems", payload.Id);
+      let data;
+      const checkLoginUser = JSON.parse(
+        localStorage.getItem("isAuthLogin") || ""
+      ).flag;
+      const userId = JSON.parse(
+        localStorage.getItem("userCurrent") || ""
+      ).userId;
+      if (checkLoginUser) {
+        /* increase qty in userProduct */
 
-      const data = JSON.parse(localStorage.getItem("addCartProduct") || "");
-      const items = data.items;
-      let total = data.total;
-      for (let i = 0; i < state.cartitems.length; i++) {
-        if (state.cartitems[i].productId === payload.Id) {
-          state.cartitems[i].qty++;
-          items[i].qty++;
-          total += items[i].price;
-          state.total += state.cartitems[i].price;
-          localStorage.setItem(
-            "addCartProduct",
-            JSON.stringify({
-              items,
-              total: total,
-              userId: null,
-              qty: state.qty,
-            })
-          );
-          break;
+        let idx = 0;
+        const userLoginData = JSON.parse(
+          localStorage.getItem("userLogin") || ""
+        );
+        let cartUserItem = [];
+        for (let i = 0; i < userLoginData.length; i++) {
+          if (userLoginData[i].id === userId) {
+            cartUserItem = userLoginData[i].cart;
+            idx = i;
+            break;
+          }
         }
-      }
-    },
+        for (let i = 0; i < state.cartitems.length; i++) {
+          if (state.cartitems[i].id === payload.Id) {
+            state.cartitems[i].qty++;
+            cartUserItem[i].qty++;
+            state.total += state.cartitems[i].price;
+            userLoginData[idx].total = state.total;
+            break;
+          }
+        }
 
-    deceraseQty(state: any, payload: any) {
-      const data = JSON.parse(localStorage.getItem("addCartProduct") || "");
-      const items = data.items;
-      let qty = data.qty;
-      let total = data.total;
-      for (let i = 0; i < state.cartitems.length; i++) {
-        if (state.cartitems[i].productId === payload.Id) {
-          if (state.cartitems[i].qty > 1) {
-            state.cartitems[i].qty--;
-            items[i].qty--;
-            total -= items[i].price;
-            state.total -= state.cartitems[i].price;
-          } else {
-            state.total -= state.cartitems[i].price;
-            total -= items[i].price;
-            state.cartitems.splice(i, 1);
-            items.splice(i, 1);
-            qty--;
-            state.qty -= 1;
+        userLoginData[idx].cart = cartUserItem;
+        localStorage.setItem("userLogin", JSON.stringify(userLoginData));
+      } else {
+        data = JSON.parse(localStorage.getItem("addCartProduct") || "");
+        const items = data.items;
+        let total = data.total;
+        for (let i = 0; i < state.cartitems.length; i++) {
+          if (state.cartitems[i].id === payload.Id) {
+            state.cartitems[i].qty++;
+            items[i].qty++;
+            total += items[i].price;
+            state.total += state.cartitems[i].price;
+
+            localStorage.setItem(
+              "addCartProduct",
+              JSON.stringify({
+                items,
+                total: total,
+                qty: state.qty,
+              })
+            );
             break;
           }
         }
       }
-      localStorage.setItem(
-        "addCartProduct",
-        JSON.stringify({
-          items,
-          total: total,
-          userId: null,
-          qty: state.qty,
-        })
-      );
+    },
+    deceraseQty(state: any, payload: any) {
+      let data;
+      const checkLoginUser = JSON.parse(
+        localStorage.getItem("isAuthLogin") || ""
+      ).flag;
+      const userId = JSON.parse(
+        localStorage.getItem("userCurrent") || ""
+      ).userId;
+      if (checkLoginUser) {
+        /* decrease qty in userProduct */
+
+        let idx = 0;
+        const userLoginData = JSON.parse(
+          localStorage.getItem("userLogin") || ""
+        );
+        let cartUserItem = [];
+        for (let i = 0; i < userLoginData.length; i++) {
+          if (userLoginData[i].id === userId) {
+            cartUserItem = userLoginData[i].cart;
+            idx = i;
+            break;
+          }
+        }
+        for (let i = 0; i < state.cartitems.length; i++) {
+          if (state.cartitems[i].id === payload.Id) {
+            if (state.cartitems[i].qty > 1) {
+              state.cartitems[i].qty--;
+              cartUserItem[i].qty--;
+              state.total -= state.cartitems[i].price;
+            } else {
+              state.total -= state.cartitems[i].price;
+              state.cartitems.splice(i, 1);
+              cartUserItem.splice(i, 1);
+              userLoginData[idx].qty = cartUserItem.length;
+              state.qty -= 1;
+              break;
+            }
+          }
+        }
+        userLoginData[idx].total = state.total;
+        userLoginData[idx].cart = cartUserItem;
+        localStorage.setItem("userLogin", JSON.stringify(userLoginData));
+      } else {
+        data = JSON.parse(localStorage.getItem("addCartProduct") || "");
+        const items = data.items;
+        let qty = data.qty;
+        let total = data.total;
+        for (let i = 0; i < state.cartitems.length; i++) {
+          if (state.cartitems[i].id === payload.Id) {
+            if (state.cartitems[i].qty > 1) {
+              state.cartitems[i].qty--;
+              items[i].qty--;
+              total -= items[i].price;
+              state.total -= state.cartitems[i].price;
+            } else {
+              state.total -= state.cartitems[i].price;
+              total -= items[i].price;
+              state.cartitems.splice(i, 1);
+              items.splice(i, 1);
+              qty--;
+              state.qty -= 1;
+              break;
+            }
+          }
+        }
+        localStorage.setItem(
+          "addCartProduct",
+          JSON.stringify({
+            items,
+            total: total,
+            qty: state.qty,
+          })
+        );
+      }
     },
     removeProductToCart(state: any, payload: any) {
-      const data = JSON.parse(localStorage.getItem("addCartProduct") || "");
-      const items = data.items;
-      let qty = data.qty;
-      let total = data.total;
-      for (let i = 0; i < state.cartitems.length; i++) {
-        if (state.cartitems[i].productId === payload.Id) {
-          console.log("products ::", state.cartitems[i]);
+      let data;
+      const userId = JSON.parse(
+        localStorage.getItem("userCurrent") || ""
+      ).userId;
+      const checkLoginUser = JSON.parse(
+        localStorage.getItem("isAuthLogin") || ""
+      ).flag;
+      if (checkLoginUser) {
+        /* remove product in userProduct */
 
-          state.total =
-            state.total - state.cartitems[i].price * state.cartitems[i].qty;
-          state.qty -= 1;
+        let idx = 0;
+        const userLoginData = JSON.parse(
+          localStorage.getItem("userLogin") || ""
+        );
+        let cartUserItem = [];
+        for (let i = 0; i < userLoginData.length; i++) {
+          if (userLoginData[i].id === userId) {
+            cartUserItem = userLoginData[i].cart;
+            idx = i;
+            break;
+          }
+        }
 
-          state.cartitems.splice(i, 1);
-          total = total - items[i].price * items[i].qty;
-          qty -= 1;
+        for (let i = 0; i < state.cartitems.length; i++) {
+          if (state.cartitems[i].id === payload.Id) {
+            state.total =
+              state.total - state.cartitems[i].price * state.cartitems[i].qty;
+            state.qty -= 1;
+            state.cartitems.splice(i, 1);
+            cartUserItem.splice(i, 1);
+            userLoginData[idx].qty = cartUserItem.length;
+            userLoginData[idx].total = state.total;
+            break;
+          }
+        }
+        userLoginData[idx].cart = cartUserItem;
+        localStorage.setItem("userLogin", JSON.stringify(userLoginData));
+      } else {
+        /* remove product in cart */
+        data = JSON.parse(localStorage.getItem("addCartProduct") || "");
+        const items = data.items;
+        let qty = data.qty;
+        let total = data.total;
+        for (let i = 0; i < state.cartitems.length; i++) {
+          if (state.cartitems[i].id === payload.Id) {
+            state.total =
+              state.total - state.cartitems[i].price * state.cartitems[i].qty;
+            state.qty -= 1;
+            state.cartitems.splice(i, 1);
+            total = total - items[i].price * items[i].qty;
+            qty -= 1;
+            items.splice(i, 1);
+            localStorage.setItem(
+              "addCartProduct",
+              JSON.stringify({
+                items,
+                total: total,
+                qty: state.qty,
+              })
+            );
 
-          items.splice(i, 1);
-
-          localStorage.setItem(
-            "addCartProduct",
-            JSON.stringify({
-              items,
-              total: total,
-              userId: null,
-              qty: qty,
-            })
-          );
-
-          break;
+            break;
+          }
         }
       }
     },

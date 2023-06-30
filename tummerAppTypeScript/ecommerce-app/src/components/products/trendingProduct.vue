@@ -1,35 +1,34 @@
 <template>
   <div>
-    <v-app>
-      <v-card-title class="text-h2 text-lg-h3 font-weight-bold"
-        >Trending Products</v-card-title
-      >
-      <div>
-        <ul>
-          <li v-for="data in cartdata" :key="data">
-            <div class="trending-style items-box">
-              <div class="section-one" @click="singleProduct(data.productId)">
-                <img :src="data.image" class="imgData" alt="image not found" />
-              </div>
-              <div class="section-two">
-                <div class="product-detail">
-                  <strong>{{ data.name }}</strong>
-                  <p><strong>Rating : </strong>4.3</p>
-                  <p><strong>Price : </strong>{{ data.price }}</p>
+    <v-card-title class="text-h2 text-lg-h3 font-weight-bold"
+      >Trending Products</v-card-title
+    >
 
-                  <p class="sell-product" v-if="data.sell === true">
-                    <strong>Sell List Product </strong>
-                  </p>
-                  <div title="add product to cart" class="add-to-cart">
-                    <v-btn @click="addToCart(data)">Add to Cart</v-btn>
-                  </div>
+    <div>
+      <ul>
+        <li v-for="data in cartdata" :key="data">
+          <div class="trending-style items-box">
+            <div class="section-one" @click="singleProduct(data.id)">
+              <img :src="data.image" class="imgData" alt="image not found" />
+            </div>
+            <div class="section-two">
+              <div class="product-detail">
+                <strong>{{ data.name }}</strong>
+                <p><strong>Rating : </strong>4.3</p>
+                <p><strong>Price : </strong>{{ data.price }}</p>
+
+                <p class="sell-product" v-if="data.sell === true">
+                  <strong>Sell List Product </strong>
+                </p>
+                <div title="add product to cart" class="add-to-cart">
+                  <v-btn @click="addToCart(data)">Add to Cart</v-btn>
                 </div>
               </div>
             </div>
-          </li>
-        </ul>
-      </div>
-    </v-app>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -40,7 +39,6 @@ export default {
   data() {
     return {
       cartdata: JSON.parse(localStorage.getItem("trendingProduct")).items,
-      
     };
   },
   computed: {},
@@ -67,8 +65,8 @@ export default {
       console.log("Id", data);
       //insert obj
       const objProduct = {
-        id: data.productId,
-        image: data.image ,
+        id: data.id,
+        image: data.image,
         name: data.name,
         price: data.price,
         sell: data.sell,
